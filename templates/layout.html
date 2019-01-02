@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='materialize.min.css') }}">
+    <script src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <title>{% block title %}{% endblock %} - Item Catalog</title>
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="{{url_for('dashboard')}}" class="brand-logo">Item catalog</a>
+      <ul class="right hide-on-med-and-down">
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="row section">
+      <div class="col">
+      <span class="new badge" data-badge-caption="">{{ message }}</span>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+  </div>
+  </body>
+</html>
