@@ -1,5 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import create_engine
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,6 +16,15 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(80), nullable=False)
     items = relationship("Item", backref="category")
+
+
+class Item(Base):
+    __tablename__ = 'item'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=False)
+    description = Column(String(500))
+    category_id = Column(Integer, ForeignKey('category.id'))
 
 
 engine = create_engine('sqlite:///item_catalog.db')
