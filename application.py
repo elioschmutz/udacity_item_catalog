@@ -23,7 +23,11 @@ def dashboard():
 
 @app.route('/categories/<string:category_title>')
 def category_view(category_title):
-    return render_template('category.html')
+    categories_query = session.query(Category)
+    categories = categories_query.all()
+    category = categories_query.filter_by(title=category_title).one()
+    return render_template('category.html',
+                           categories=categories, category=category)
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>')

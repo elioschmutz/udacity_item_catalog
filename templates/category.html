@@ -1,11 +1,24 @@
 {% extends "layout.html" %}
+{% import 'macros.html' as macros %}
 
 {% block header %}
-  <h1>{% block title %}Category{% endblock %}</h1>
+  <h1>{% block title %}Category {{category.title}}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-
-Category
-
+<div class="row">
+    <div class="col s12 m4">
+        {{ macros.categories_listing(categories) }}
+    </div>
+    <div class="col s12 m8">
+        <h2>{{category.title}} items <span class="grey-text">({{category.items|length}} items)</span></h2>
+        <div class="collection">
+            {% for item in category.items %}
+                <a href="{{url_for('item_view', category_title=item.category.title, item_title=item.title)}}" class="collection-item">
+                    {{item.title}}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
