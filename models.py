@@ -1,11 +1,13 @@
 from sqlalchemy import Column
 from sqlalchemy import create_engine
+from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
+import datetime
 
 Base = declarative_base()
 
@@ -24,6 +26,7 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(80), nullable=False)
     description = Column(String(500))
+    creation_date = Column(DateTime, default=datetime.datetime.utcnow)
     category_id = Column(Integer, ForeignKey('category.id'))
 
 
