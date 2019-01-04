@@ -1,0 +1,10 @@
+{% macro categories_listing(categories) -%}
+<h2>Categories</h2>
+<div class="collection">
+    {% for category in categories %}
+    <a href="{{url_for('category_view', category_title=category.title)}}" class="collection-item">
+        <span class="badge">{{category.items|length}}</span>{{category.title}}
+    </a>
+    {% endfor %}
+</div>
+{%- endmacro %}
