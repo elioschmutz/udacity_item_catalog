@@ -32,7 +32,8 @@ def category_view(category_title):
 
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
-    return render_template('item.html')
+    item = session.query(Item).filter_by(title=item_title).one()
+    return render_template('item.html', item=item)
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>/edit')
