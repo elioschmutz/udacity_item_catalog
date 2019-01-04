@@ -16,7 +16,7 @@ class Category(Base):
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(80), nullable=False)
+    title = Column(String(80), nullable=False, unique=True)
     items = relationship("Item", backref="category")
 
 

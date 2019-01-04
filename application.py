@@ -1,5 +1,8 @@
 from flask import Flask
 from flask import render_template
+from models import Category
+from models import Item
+from models import session
 
 
 app = Flask(__name__)
@@ -12,7 +15,10 @@ def catalog_json_view():
 
 @app.route('/')
 def dashboard():
-    return render_template('dashboard.html')
+    categories = session.query(Category).all()
+    items = session.query(Item).order_by('creation_date desc').limit(10).all()
+
+    return render_template('dashboard.html', categories=categories, items=items)
 
 
 @app.route('/categories/<string:category_title>')
