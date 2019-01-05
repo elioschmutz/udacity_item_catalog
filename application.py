@@ -1,10 +1,10 @@
+from flask import abort
 from flask import Flask
 from flask import jsonify
 from flask import render_template
 from models import Category
 from models import Item
 from models import session
-
 
 app = Flask(__name__)
 
@@ -29,14 +29,19 @@ def dashboard():
 def category_view(category_title):
     categories_query = session.query(Category)
     categories = categories_query.all()
-    category = categories_query.filter_by(title=category_title).one()
+    category = categories_query.filter_by(title=category_title).first()
+
+    if not category:
+        return abort(404)
     return render_template('category.html',
                            categories=categories, category=category)
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
-    item = session.query(Item).filter_by(title=item_title).one()
+    item = session.query(Item).filter_by(title=item_title).first()
+    if not item:
+        return abort(404)
     return render_template('item.html', item=item)
 
 
@@ -65,11 +70,9 @@ def signup_view():
     return render_template('signup.html')
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def not_found_view(path):
-    return render_template('404.html')
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.debug = True
