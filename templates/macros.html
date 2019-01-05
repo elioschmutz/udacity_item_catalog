@@ -1,8 +1,8 @@
-{% macro categories_listing(categories) -%}
+{% macro categories_listing(categories, active_category) -%}
 <h2>Categories</h2>
 <div class="collection">
     {% for category in categories %}
-    <a href="{{url_for('category_view', category_title=category.title)}}" class="collection-item">
+    <a href="{{url_for('category_view', category_title=category.title)}}" class="collection-item {{active_category and category.title == active_category.title and 'active'}}">
         <span class="badge">{{category.items|length}}</span>{{category.title}}
     </a>
     {% endfor %}
