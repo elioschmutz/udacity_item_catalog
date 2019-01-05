@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import jsonify
 from flask import render_template
 from models import Category
 from models import Item
@@ -10,7 +11,10 @@ app = Flask(__name__)
 
 @app.route('/catalog.json')
 def catalog_json_view():
-    return "rest-api"
+    categories = session.query(Category).all()
+
+    return jsonify(
+        {'categories': [category.as_dict() for category in categories]})
 
 
 @app.route('/')

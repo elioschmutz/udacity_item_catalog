@@ -4,12 +4,21 @@ from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-Base = declarative_base()
+
+@as_declarative()
+class Base(object):
+    def as_dict(self):
+        """ Returns all table-columns as a dict.
+        """
+        return {
+            column.name: getattr(self, column.name)
+            for column in self.__table__.columns
+            }
 
 
 class Category(Base):
@@ -18,6 +27,11 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(80), nullable=False, unique=True)
     items = relationship("Item", backref="category")
+
+    def as_dict(self):
+        values = super(Category, self).as_dict()
+        values['items'] = [item.as_dict() for item in self.items]
+        return values
 
 
 class Item(Base):
