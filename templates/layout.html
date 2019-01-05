@@ -2,6 +2,7 @@
 <html>
   <head>
     {% block head %}
+    {% endblock %}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='materialize.min.css') }}">
@@ -10,12 +11,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <title>{% block title %}{% endblock %} - Item Catalog</title>
-    {% endblock %}
   </head>
   <body>
     <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="{{url_for('dashboard')}}" class="brand-logo">Item catalog</a>
       <ul class="right hide-on-med-and-down">
+        {% if is_authenticated() %}
+          <li><a href="{{url_for('logout_view')}}" class="waves-effect waves-light btn">Logout</a></li>
+        {% else %}
+          <li><a href="{{url_for('login_view')}}" class="waves-effect waves-light btn">Login</a></li>
+        {% endif %}
       </ul>
 
       <ul id="nav-mobile" class="sidenav">

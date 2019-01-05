@@ -6,6 +6,20 @@
 
 {% block content %}
 
-Login
+<form action="{{url_for('login_view')}}" method='POST'>
+
+    <label for="email">E-Mail</label>
+    <input type='text' size='30' name='email' required>
+
+    <label for="password">Password</label>
+    <input type='password' size='30' name='password' required>
+
+    <input type='hidden' name='csrf_token' value={{csrf_token}} required>
+
+    <input class="waves-effect waves-light btn" type='submit' value='Login'>
+    <a href="{{url_for('signup_view')}}" class="waves-effect btn">Sign-Up</a>
+</form>
+
+
 
 {% endblock %}

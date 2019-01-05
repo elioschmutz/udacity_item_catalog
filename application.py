@@ -1,12 +1,41 @@
 from flask import abort
+from flask import flash
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import request
+from flask import session as flask_session
 from models import Category
 from models import Item
 from models import session
+from models import User
+import random
+import string
+
 
 app = Flask(__name__)
+
+
+app.jinja_env.globals.update(
+    is_authenticated=lambda: hasattr(app, 'current_user'))
+
+
+def set_csrf_token():
+    """Sets a new csrf_token to the user-session and returns it.
+    """
+    csrf_token = ''.join(
+        random.choice(string.ascii_uppercase + string.digits)
+        for x in xrange(32))
+
+    flask_session['csrf_token'] = csrf_token
+    return csrf_token
+
+
+def validate_csrf_token(token):
+    """Validates the given csrf-token with the token stored within the
+    user-session.
+    """
+    return flask_session['csrf_token'] == token
 
 
 @app.route('/catalog.json')
@@ -55,9 +84,21 @@ def item_delete_view(category_title, item_title):
     return render_template('item_delete.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login_view():
-    return render_template('login.html')
+    if request.method == 'POST':
+        if not validate_csrf_token(request.form.get('csrf_token')):
+            return abort(401)
+
+        user = session.query(User).filter_by(
+            email=request.form.get('email')).first()
+        if not user:
+            flash("No user found with the given email and the password.")
+            return render_template('login.html', csrf_token=set_csrf_token())
+
+        # TODO: Login the user
+
+    return render_template('login.html', csrf_token=set_csrf_token())
 
 
 @app.route('/logout')
@@ -81,5 +122,6 @@ def unauthorized_view(e):
 
 
 if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
