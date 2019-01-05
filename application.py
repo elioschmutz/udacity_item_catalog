@@ -74,6 +74,12 @@ def signup_view():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
+@app.errorhandler(401)
+def unauthorized_view(e):
+    return render_template('401.html'), 401
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
