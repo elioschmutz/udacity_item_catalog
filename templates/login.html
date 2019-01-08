@@ -1,25 +1,49 @@
 {% extends "layout.html" %}
 
+
+{% block head %}
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+{% endblock %}
+
 {% block header %}
   <h1>{% block title %}Login{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 
-<form action="{{url_for('login_view')}}" method='POST'>
+    <p class="error"></p>
 
-    <label for="email">E-Mail</label>
-    <input type='text' size='30' name='email' required>
+          <div id="signinButton">
+          <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="{{googleclientid}}"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="onSignIn"
+            data-approvalprompt="force">
+          </span>
+        </div>
 
-    <label for="password">Password</label>
-    <input type='password' size='30' name='password' required>
+<!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+<script>
+  function onSignIn(googleUser) {
+    // The ID token you need to pass to your backend:
+    var id_token = googleUser['code'];
+    var payload = {
+        id_token: id_token,
+        csrf_token: '{{csrf_token}}'
+    };
+    $.post("/googlelogin", payload).done(function(data) {
+        if ( data ) {
+            window.location.href = "/";
+        }
 
-    <input type='hidden' name='csrf_token' value={{csrf_token}} required>
-
-    <input class="waves-effect waves-light btn" type='submit' value='Login'>
-    <a href="{{url_for('signup_view')}}" class="waves-effect btn">Sign-Up</a>
-</form>
-
+    }).fail(function(data) {
+        $(".error").html("Something went wrong: " + data.responseJSON);
+    });
+}
+</script>
 
 
 {% endblock %}

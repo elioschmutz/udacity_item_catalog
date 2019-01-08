@@ -1,2 +1,4 @@
 *.pyc
 *.db
+google_secrets.json
+

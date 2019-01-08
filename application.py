@@ -1,14 +1,19 @@
+from authentication.google import AccessTokenValidationError
+from authentication.google import GoogleAuth
+from authentication.auth import login
 from flask import abort
 from flask import flash
 from flask import Flask
 from flask import jsonify
+from flask import make_response
 from flask import render_template
 from flask import request
 from flask import session as flask_session
 from models import Category
 from models import Item
 from models import session
-from models import User
+from oauth2client.client import FlowExchangeError
+import json
 import random
 import string
 
@@ -44,6 +49,27 @@ def catalog_json_view():
 
     return jsonify(
         {'categories': [category.as_dict() for category in categories]})
+
+CLIENT_ID = json.loads(
+    open('google_secrets.json', 'r').read())['web']['client_id']
+
+
+@app.route('/googlelogin', methods=['POST'])
+def googlelogin():
+    # Validate state token
+    if not validate_csrf_token(request.form.get('csrf_token')):
+        response = make_response(json.dumps('Invalid state parameter.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    try:
+        login('google', request.form.get('id_token'))
+    except (AccessTokenValidationError, FlowExchangeError, ValueError) as err:
+        response = make_response(json.dumps(err.message), 500)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    return 'successful'
 
 
 @app.route('/')
@@ -84,21 +110,11 @@ def item_delete_view(category_title, item_title):
     return render_template('item_delete.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login_view():
-    if request.method == 'POST':
-        if not validate_csrf_token(request.form.get('csrf_token')):
-            return abort(401)
-
-        user = session.query(User).filter_by(
-            email=request.form.get('email')).first()
-        if not user:
-            flash("No user found with the given email and the password.")
-            return render_template('login.html', csrf_token=set_csrf_token())
-
-        # TODO: Login the user
-
-    return render_template('login.html', csrf_token=set_csrf_token())
+    return render_template('login.html',
+                           csrf_token=set_csrf_token(),
+                           googleclientid=CLIENT_ID)
 
 
 @app.route('/logout')
