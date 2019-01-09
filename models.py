@@ -20,6 +20,13 @@ class Base(object):
             for column in self.__table__.columns
             }
 
+    @classmethod
+    def create(self, **kwargs):
+        obj = self(**kwargs)
+        session.add(obj)
+        session.commit()
+        return session.query(self).filter_by(id=obj.id).one()
+
 
 class Category(Base):
     __tablename__ = 'category'
