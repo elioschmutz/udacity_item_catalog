@@ -13,7 +13,6 @@ from flask import session as flask_session
 from flask import url_for
 from models import Category
 from models import Item
-from models import Session
 from oauth2client.client import FlowExchangeError
 import json
 import random
@@ -52,7 +51,7 @@ def restore_login_session():
 
 @app.route('/catalog.json')
 def catalog_json_view():
-    categories = Session().query(Category).all()
+    categories = Category.query().all()
 
     return jsonify(
         {'categories': [category.as_dict() for category in categories]})
@@ -81,15 +80,15 @@ def googlelogin():
 
 @app.route('/')
 def dashboard():
-    categories = Session().query(Category).all()
-    items = Session().query(Item).order_by('creation_date desc').limit(10).all()
+    categories = Category.query().all()
+    items = Item.query().order_by('creation_date desc').limit(10).all()
 
     return render_template('dashboard.html', categories=categories, items=items)
 
 
 @app.route('/categories/<string:category_title>')
 def category_view(category_title):
-    categories_query = Session().query(Category)
+    categories_query = Category.query()
     categories = categories_query.all()
     category = categories_query.filter_by(title=category_title).first()
 
@@ -101,7 +100,7 @@ def category_view(category_title):
 
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
-    item = Session().query(Item).filter_by(title=item_title).first()
+    item = Item.query().filter_by(title=item_title).first()
     if not item:
         return abort(404)
     return render_template('item.html', item=item)

@@ -26,7 +26,11 @@ class Base(object):
         obj = self(**kwargs)
         Session().add(obj)
         Session().commit()
-        return Session().query(self).filter_by(id=obj.id).one()
+        return self.query().filter_by(id=obj.id).one()
+
+    @classmethod
+    def query(self):
+        return Session().query(self)
 
 
 class Category(Base):
@@ -64,13 +68,13 @@ class User(Base):
 
     @classmethod
     def lookup_by_user_id(self, user_id):
-        user = Session().query(self).filter_by(id=user_id).one()
+        user = self.query().filter_by(id=user_id).one()
         return user
 
     @classmethod
     def lookup_by_email(self, email):
         try:
-            return Session().query(self).filter_by(email=email).one()
+            return self.query().filter_by(email=email).one()
         except:
             return None
 
@@ -85,7 +89,7 @@ class LoginSession(Base):
 
     @classmethod
     def lookup_by_token(self, token):
-        return Session().query(self).filter_by(token=token).first()
+        return self.query().filter_by(token=token).first()
 
 engine = create_engine('sqlite:///item_catalog.db')
 Base.metadata.bind = engine
