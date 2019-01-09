@@ -230,7 +230,7 @@ def page_not_found(e):
 
 @app.errorhandler(401)
 def unauthorized_view(e):
-    return render_template('401.html'), 401
+    return redirect(url_for('login_view'))
 
 
 if __name__ == '__main__':
