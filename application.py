@@ -16,6 +16,7 @@ from models import Category
 from models import Item
 from models import Session
 from oauth2client.client import FlowExchangeError
+from security.routes import requires_auth
 import json
 import random
 import string
@@ -119,6 +120,7 @@ def item_view(category_title, item_title):
 
 
 @app.route('/categories/item/add', methods=['GET', 'POST'])
+@requires_auth
 def item_add_view():
     def render():
         return render_template(
@@ -147,6 +149,7 @@ def item_add_view():
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>/edit', methods=['GET', 'POST'])
+@requires_auth
 def item_edit_view(category_title, item_title):
     def render():
         return render_template('item_edit.html', categories=categories, item=item)
@@ -180,6 +183,7 @@ def item_edit_view(category_title, item_title):
 
 @app.route('/categories/<string:category_title>/<string:item_title>/delete',
            methods=['GET', 'POST'])
+@requires_auth
 def item_delete_view(category_title, item_title):
     item = Item.query().filter_by(title=item_title).first()
 
@@ -207,6 +211,7 @@ def login_view():
 
 
 @app.route('/logout')
+@requires_auth
 def logout_view():
     auth.logout()
     flash("You have been logged out successfully")
