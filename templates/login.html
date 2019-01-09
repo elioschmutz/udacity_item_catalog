@@ -40,7 +40,11 @@
         }
 
     }).fail(function(data) {
-        $(".error").html("Something went wrong: " + data.responseJSON);
+        if (data.status === 403) {
+            $(".error").html("Something went wrong: " + data.statusText);
+        } else {
+            $(".error").html("Something went wrong: " + data.responseJSON);
+        }
     });
 }
 </script>

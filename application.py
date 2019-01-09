@@ -3,7 +3,6 @@ from authentication.google import AccessTokenValidationError
 from flask import abort
 from flask import flash
 from flask import Flask
-from flask import g
 from flask import jsonify
 from flask import make_response
 from flask import redirect
@@ -16,10 +15,9 @@ from models import Category
 from models import Item
 from models import Session
 from oauth2client.client import FlowExchangeError
+from security.csrf import csrf_protection
 from security.routes import requires_auth
 import json
-import random
-import string
 
 
 app = Flask(__name__)
@@ -32,24 +30,6 @@ app.jinja_env.globals.update(
 @app.context_processor
 def inject_user():
     return dict(user=auth.get_current_user())
-
-
-def set_csrf_token():
-    """Sets a new csrf_token to the user-session and returns it.
-    """
-    csrf_token = ''.join(
-        random.choice(string.ascii_uppercase + string.digits)
-        for x in xrange(32))
-
-    flask_session['csrf_token'] = csrf_token
-    return csrf_token
-
-
-def validate_csrf_token(token):
-    """Validates the given csrf-token with the token stored within the
-    user-session.
-    """
-    return flask_session['csrf_token'] == token
 
 
 @app.before_request
@@ -69,13 +49,8 @@ CLIENT_ID = json.loads(
 
 
 @app.route('/googlelogin', methods=['POST'])
+@csrf_protection
 def googlelogin():
-    # Validate state token
-    if not validate_csrf_token(request.form.get('csrf_token')):
-        response = make_response(json.dumps('Invalid state parameter.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-
     try:
         auth.login('google', request.form.get('id_token'))
     except (AccessTokenValidationError, FlowExchangeError, ValueError) as err:
@@ -201,12 +176,13 @@ def item_delete_view(category_title, item_title):
 
 
 @app.route('/login', methods=['GET'])
+@csrf_protection
 def login_view():
     if auth.is_authenticated():
         flash("You are already logged in")
         return redirect(url_for('dashboard'))
     return render_template('login.html',
-                           csrf_token=set_csrf_token(),
+                           csrf_token=flask_session.get('csrf_token'),
                            googleclientid=CLIENT_ID)
 
 
