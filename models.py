@@ -59,6 +59,17 @@ class User(Base):
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
 
+    @classmethod
+    def lookup_by_user_id(self, user_id):
+        user = session.query(self).filter_by(id=user_id).one()
+        return user
+
+    @classmethod
+    def lookup_by_email(self, email):
+        try:
+            return session.query(self).filter_by(email=email).one()
+        except:
+            return None
 
 engine = create_engine('sqlite:///item_catalog.db')
 Base.metadata.bind = engine
