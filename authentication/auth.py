@@ -52,3 +52,6 @@ class Authentication(object):
         if not self.is_authenticated():
             return None
         return providers.get(g.current_login_session.provider)
+
+    def get_current_user(self):
+        return g.current_user if self.is_authenticated() else None

@@ -82,6 +82,9 @@ class User(Base):
         except:
             return None
 
+    def fullname(self):
+        return self.name or self.email
+
 
 class LoginSession(Base):
     __tablename__ = 'login_session'

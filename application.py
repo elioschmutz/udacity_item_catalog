@@ -26,6 +26,11 @@ app.jinja_env.globals.update(
     is_authenticated=lambda: auth.is_authenticated())
 
 
+@app.context_processor
+def inject_user():
+    return dict(user=auth.get_current_user())
+
+
 def set_csrf_token():
     """Sets a new csrf_token to the user-session and returns it.
     """

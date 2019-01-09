@@ -20,6 +20,8 @@
     <div class="nav-wrapper container"><a id="logo-container" href="{{url_for('dashboard')}}" class="brand-logo">Item catalog</a>
       <ul class="right hide-on-med-and-down">
         {% if is_authenticated() %}
+          <li><div class="userInfo"><img style="height: 100%" src={{user.picture}} alt="" class="circle responsive-img"></div></li>
+          <li>{{user.fullname()}}</li>
           <li><a href="{{url_for('logout_view')}}" class="waves-effect waves-light btn">Logout</a></li>
         {% else %}
           <li><a href="{{url_for('login_view')}}" class="waves-effect waves-light btn">Login</a></li>

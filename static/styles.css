@@ -1,0 +1,9 @@
+.userInfo {
+    height: 63px;
+    padding: 10px 0;
+    margin-right: 1em;
+}
+
+.userInfo img {
+    height: 100%;
+}
