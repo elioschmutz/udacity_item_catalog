@@ -58,6 +58,7 @@ class User(Base):
     name = Column(String(250))
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
+    login_sessions = relationship("LoginSession", backref="user")
 
     @classmethod
     def lookup_by_user_id(self, user_id):
@@ -70,6 +71,19 @@ class User(Base):
             return session.query(self).filter_by(email=email).one()
         except:
             return None
+
+
+class LoginSession(Base):
+    __tablename__ = 'login_session'
+
+    id = Column(Integer, primary_key=True)
+    token = Column(String(250), nullable=False)
+    provider = Column(String(250))
+    user_id = Column(Integer, ForeignKey('user.id'))
+
+    @classmethod
+    def lookup_by_token(self, token):
+        return session.query(self).filter_by(token=token).first()
 
 engine = create_engine('sqlite:///item_catalog.db')
 Base.metadata.bind = engine
