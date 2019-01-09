@@ -108,8 +108,13 @@ def category_view(category_title):
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
     item = Item.query().filter_by(title=item_title).first()
+
     if not item:
         return abort(404)
+
+    if not category_title == item.category.title:
+        return abort(404)
+
     return render_template('item.html', item=item)
 
 
@@ -145,6 +150,12 @@ def item_edit_view(category_title, item_title):
 
     categories = Category.query().all()
     item = Item.query().filter_by(title=item_title).first()
+
+    if not item:
+        return abort(404)
+
+    if not category_title == item.category.title:
+        return abort(404)
 
     if request.method == 'POST':
         category_id = escape(request.form.get('category_id'))
