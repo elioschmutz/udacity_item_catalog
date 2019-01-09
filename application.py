@@ -121,7 +121,10 @@ def item_view(category_title, item_title):
 @app.route('/categories/item/add', methods=['GET', 'POST'])
 def item_add_view():
     def render():
-        return render_template('item_add.html', categories=categories)
+        return render_template(
+            'item_add.html',
+            categories=categories,
+            category_id=int(request.args.get('category_id', 0)))
 
     categories = Category.query().all()
 
