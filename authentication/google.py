@@ -29,6 +29,11 @@ class GoogleAuth(object):
         self._validate_access_token(credentials, tokeninfo)
         return self._process_login(credentials)
 
+    def logout(self, access_token):
+        requests.post('https://accounts.google.com/o/oauth2/revoke',
+                      params={'token':access_token},
+                      headers={'content-type': 'application/x-www-form-urlencoded'})
+
     def _get_credentials_object(self, code):
         """Upgrade the authorization code into a credentials object
         """

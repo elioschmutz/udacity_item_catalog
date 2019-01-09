@@ -46,7 +46,7 @@ def validate_csrf_token(token):
 
 @app.before_request
 def restore_login_session():
-    auth.restore_session(flask_session.get('access_token'))
+    auth.restore_session()
 
 
 @app.route('/catalog.json')
@@ -128,7 +128,9 @@ def login_view():
 
 @app.route('/logout')
 def logout_view():
-    return render_template('logout.html')
+    auth.logout()
+    flash("You have been logged out successfully")
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/signup')

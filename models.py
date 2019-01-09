@@ -32,6 +32,10 @@ class Base(object):
     def query(self):
         return Session().query(self)
 
+    def delete(self):
+        Session().delete(self)
+        Session().commit()
+
 
 class Category(Base):
     __tablename__ = 'category'
