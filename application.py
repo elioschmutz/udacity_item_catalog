@@ -11,6 +11,7 @@ from flask import render_template
 from flask import request
 from flask import session as flask_session
 from flask import url_for
+from markupsafe import escape
 from models import Category
 from models import Item
 from oauth2client.client import FlowExchangeError
@@ -109,6 +110,31 @@ def item_view(category_title, item_title):
     if not item:
         return abort(404)
     return render_template('item.html', item=item)
+
+
+@app.route('/categories/item/add', methods=['GET', 'POST'])
+def item_add_view():
+    def render():
+        return render_template('item_add.html', categories=categories)
+
+    categories = Category.query().all()
+
+    if request.method == 'POST':
+        category_id = escape(request.form.get('category_id'))
+        category = Category.query().get(category_id)
+
+        if not category:
+            flash("No category fouond with ID {}".format(category_id))
+            return render()
+
+        Item.create(
+            title=escape(request.form.get('title')),
+            description=escape(request.form.get('description')),
+            category=category,
+            )
+        flash("Successfully added Item")
+        return redirect(url_for('dashboard'))
+    return render()
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>/edit')
