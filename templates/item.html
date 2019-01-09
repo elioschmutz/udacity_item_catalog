@@ -5,6 +5,12 @@
   <h1>{% block title %}{{item.title}} <span class="grey-text">({{item.category.title}})</span>{% endblock %}</h1>
 {% endblock %}
 
+{% block editnav %}
+<ul>
+  <li><a href="{{url_for('item_edit_view', category_title=item.category.title, item_title=item.title)}}" class="waves-effect waves-light btn"><i class="material-icons left">edit</i>Edit</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col s12 m4">

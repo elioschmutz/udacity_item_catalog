@@ -14,6 +14,7 @@ from flask import url_for
 from markupsafe import escape
 from models import Category
 from models import Item
+from models import Session
 from oauth2client.client import FlowExchangeError
 import json
 import random
@@ -137,9 +138,30 @@ def item_add_view():
     return render()
 
 
-@app.route('/categories/<string:category_title>/<string:item_title>/edit')
+@app.route('/categories/<string:category_title>/<string:item_title>/edit', methods=['GET', 'POST'])
 def item_edit_view(category_title, item_title):
-    return render_template('item_edit.html')
+    def render():
+        return render_template('item_edit.html', categories=categories, item=item)
+
+    categories = Category.query().all()
+    item = Item.query().filter_by(title=item_title).first()
+
+    if request.method == 'POST':
+        category_id = escape(request.form.get('category_id'))
+        category = Category.query().get(category_id)
+
+        if not category:
+            flash("No category fouond with ID {}".format(category_id))
+            return render()
+
+        item.title = escape(request.form.get('title'))
+        item.description = escape(request.form.get('description'))
+        item.category = category
+        Session.commit()
+        flash("Successfully updated Item")
+        return redirect(url_for(
+            'item_view', category_title=category.title, item_title=item.title))
+    return render()
 
 
 @app.route('/categories/<string:category_title>/<string:item_title>/delete')
