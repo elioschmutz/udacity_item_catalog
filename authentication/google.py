@@ -29,13 +29,6 @@ class GoogleAuth(object):
         self._validate_access_token(credentials, tokeninfo)
         return self._process_login(credentials)
 
-    def restore_session(self):
-        """Restores a login session based on the access_token within the
-        user-session
-        """
-        return LoginSession.lookup_by_token(
-            flask_session.get('access_token'))
-
     def _get_credentials_object(self, code):
         """Upgrade the authorization code into a credentials object
         """

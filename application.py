@@ -1,17 +1,19 @@
+from authentication.auth import Authentication
 from authentication.google import AccessTokenValidationError
-from authentication.google import GoogleAuth
-from authentication.auth import login
 from flask import abort
 from flask import flash
 from flask import Flask
+from flask import g
 from flask import jsonify
 from flask import make_response
+from flask import redirect
 from flask import render_template
 from flask import request
 from flask import session as flask_session
+from flask import url_for
 from models import Category
 from models import Item
-from models import session
+from models import Session
 from oauth2client.client import FlowExchangeError
 import json
 import random
@@ -19,10 +21,10 @@ import string
 
 
 app = Flask(__name__)
-
+auth = Authentication()
 
 app.jinja_env.globals.update(
-    is_authenticated=lambda: hasattr(app, 'current_user'))
+    is_authenticated=lambda: auth.is_authenticated())
 
 
 def set_csrf_token():
@@ -43,9 +45,14 @@ def validate_csrf_token(token):
     return flask_session['csrf_token'] == token
 
 
+@app.before_request
+def restore_login_session():
+    auth.restore_session(flask_session.get('access_token'))
+
+
 @app.route('/catalog.json')
 def catalog_json_view():
-    categories = session.query(Category).all()
+    categories = Session().query(Category).all()
 
     return jsonify(
         {'categories': [category.as_dict() for category in categories]})
@@ -63,7 +70,7 @@ def googlelogin():
         return response
 
     try:
-        login('google', request.form.get('id_token'))
+        auth.login('google', request.form.get('id_token'))
     except (AccessTokenValidationError, FlowExchangeError, ValueError) as err:
         response = make_response(json.dumps(err.message), 500)
         response.headers['Content-Type'] = 'application/json'
@@ -74,15 +81,15 @@ def googlelogin():
 
 @app.route('/')
 def dashboard():
-    categories = session.query(Category).all()
-    items = session.query(Item).order_by('creation_date desc').limit(10).all()
+    categories = Session().query(Category).all()
+    items = Session().query(Item).order_by('creation_date desc').limit(10).all()
 
     return render_template('dashboard.html', categories=categories, items=items)
 
 
 @app.route('/categories/<string:category_title>')
 def category_view(category_title):
-    categories_query = session.query(Category)
+    categories_query = Session().query(Category)
     categories = categories_query.all()
     category = categories_query.filter_by(title=category_title).first()
 
@@ -94,7 +101,7 @@ def category_view(category_title):
 
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
-    item = session.query(Item).filter_by(title=item_title).first()
+    item = Session().query(Item).filter_by(title=item_title).first()
     if not item:
         return abort(404)
     return render_template('item.html', item=item)
@@ -112,6 +119,9 @@ def item_delete_view(category_title, item_title):
 
 @app.route('/login', methods=['GET'])
 def login_view():
+    if auth.is_authenticated():
+        flash("You are already logged in")
+        return redirect(url_for('dashboard'))
     return render_template('login.html',
                            csrf_token=set_csrf_token(),
                            googleclientid=CLIENT_ID)

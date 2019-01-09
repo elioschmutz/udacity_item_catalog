@@ -6,6 +6,7 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 import datetime
 
@@ -23,9 +24,9 @@ class Base(object):
     @classmethod
     def create(self, **kwargs):
         obj = self(**kwargs)
-        session.add(obj)
-        session.commit()
-        return session.query(self).filter_by(id=obj.id).one()
+        Session().add(obj)
+        Session().commit()
+        return Session().query(self).filter_by(id=obj.id).one()
 
 
 class Category(Base):
@@ -63,13 +64,13 @@ class User(Base):
 
     @classmethod
     def lookup_by_user_id(self, user_id):
-        user = session.query(self).filter_by(id=user_id).one()
+        user = Session().query(self).filter_by(id=user_id).one()
         return user
 
     @classmethod
     def lookup_by_email(self, email):
         try:
-            return session.query(self).filter_by(email=email).one()
+            return Session().query(self).filter_by(email=email).one()
         except:
             return None
 
@@ -84,12 +85,11 @@ class LoginSession(Base):
 
     @classmethod
     def lookup_by_token(self, token):
-        return session.query(self).filter_by(token=token).first()
+        return Session().query(self).filter_by(token=token).first()
 
 engine = create_engine('sqlite:///item_catalog.db')
 Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+Session = scoped_session(sessionmaker(bind=engine))
 
 
 def setup():
