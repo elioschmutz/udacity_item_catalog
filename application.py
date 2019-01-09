@@ -178,9 +178,22 @@ def item_edit_view(category_title, item_title):
     return render()
 
 
-@app.route('/categories/<string:category_title>/<string:item_title>/delete')
+@app.route('/categories/<string:category_title>/<string:item_title>/delete',
+           methods=['GET', 'POST'])
 def item_delete_view(category_title, item_title):
-    return render_template('item_delete.html')
+    item = Item.query().filter_by(title=item_title).first()
+
+    if not item:
+        return abort(404)
+
+    if not category_title == item.category.title:
+        return abort(404)
+
+    if request.method == 'POST':
+        item.delete()
+        flash("Item successfully deleted")
+        return redirect(url_for('dashboard'))
+    return render_template('item_delete.html', item=item)
 
 
 @app.route('/login', methods=['GET'])

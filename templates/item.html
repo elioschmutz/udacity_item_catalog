@@ -8,6 +8,7 @@
 {% block editnav %}
 <ul>
   <li><a href="{{url_for('item_edit_view', category_title=item.category.title, item_title=item.title)}}" class="waves-effect waves-light btn"><i class="material-icons left">edit</i>Edit</a></li>
+  <li><a href="{{url_for('item_delete_view', category_title=item.category.title, item_title=item.title)}}" class="waves-effect waves-light btn"><i class="material-icons left">delete</i>Delete</a></li>
 </ul>
 {% endblock %}
 
