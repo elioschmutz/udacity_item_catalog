@@ -4,6 +4,7 @@
 
 - [Installation](#installation)
     - [Set up Google OAuth2](#set-up-google-oauth2)
+    - [Set up Facebook OAuth2](#set-up-facebook-oauth2)
 
 <!-- /MarkdownTOC -->
 
@@ -32,3 +33,17 @@ python application.py
 - Create a new app in the [Google Cloud Console](https://console.cloud.google.com/)
 - Go to "API's and Services" => "Credentials" and create a new `OAuth client ID`
 - Download the Client-Secret JSON and place it within this folder with the name `google_secrets.json`
+
+### Set up Facebook OAuth2
+
+- Create a new app in the [Facebook Developer Center](https://developers.facebook.com/apps)
+- Copy the following code into a file called `facebook_secrets.json`
+
+```
+{
+  "web": {
+    "app_id": "your app id",
+    "app_secret": "your app secret"
+  }
+}
+```

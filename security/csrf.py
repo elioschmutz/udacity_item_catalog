@@ -17,7 +17,8 @@ def csrf_protection(func):
             flask_session['csrf_token'] = csrf_token
 
         else:
-            csrf_token = request.form.get('csrf_token')
+            csrf_token = request.form.get(
+                'csrf_token', request.args.get('csrf_token'))
             if flask_session['csrf_token'] != csrf_token:
                 abort(403)
 

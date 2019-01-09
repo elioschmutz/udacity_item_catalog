@@ -1,10 +1,12 @@
+from authentication.facebook import FacebookAuth
 from authentication.google import GoogleAuth
 from flask import g
 from flask import session as flask_session
 from models import LoginSession
 
 providers = {
-    'google': GoogleAuth()
+    'google': GoogleAuth(),
+    'facebook': FacebookAuth()
 }
 
 

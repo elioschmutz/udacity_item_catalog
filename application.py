@@ -61,6 +61,13 @@ def googlelogin():
     return 'successful'
 
 
+@app.route('/fbconnect', methods=['POST'])
+@csrf_protection
+def fbconnect():
+    auth.login('facebook', request.data)
+    return 'successful'
+
+
 @app.route('/')
 def dashboard():
     categories = Category.query().all()

@@ -26,6 +26,8 @@
         </div>
 
 <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+
+<!--GOOGLE SIGN IN -->
 <script>
   function onSignIn(googleUser) {
     // The ID token you need to pass to your backend:
@@ -48,6 +50,64 @@
     });
 }
 </script>
+<!--END GOOGLE SIGN IN -->
+
+<!--FACEBOOK SIGN IN -->
+<script>
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '281166855790577',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v3.2'
+    });
+
+    FB.AppEvents.logPageView();
+
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function sendTokenToServer() {
+    var access_token = FB.getAuthResponse()['accessToken'];
+    FB.api('/me', function(response) {
+     $.ajax({
+      type: 'POST',
+      url: '/fbconnect?csrf_token={{csrf_token}}',
+      processData: false,
+      data: access_token,
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response if necessary.
+        if (result) {
+            window.location.href = "/";
+        } else {
+            $(".error").html("Something went wrong");
+        }
+      }
+
+  });
+
+
+    });
+  }
+</script>
+
+<fb:login-button
+  scope="public_profile,email"
+  onlogin="sendTokenToServer();">
+</fb:login-button>
+
+<!--END FACEBOOK SIGN IN -->
 
 
 {% endblock %}
