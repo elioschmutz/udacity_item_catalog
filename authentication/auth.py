@@ -1,4 +1,5 @@
 from authentication.facebook import FacebookAuth
+from authentication.github import GithubAuth
 from authentication.google import GoogleAuth
 from flask import g
 from flask import session as flask_session
@@ -6,7 +7,8 @@ from models import LoginSession
 
 providers = {
     'google': GoogleAuth(),
-    'facebook': FacebookAuth()
+    'facebook': FacebookAuth(),
+    'github': GithubAuth()
 }
 
 

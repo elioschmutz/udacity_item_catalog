@@ -5,6 +5,7 @@
 - [Installation](#installation)
     - [Set up Google OAuth2](#set-up-google-oauth2)
     - [Set up Facebook OAuth2](#set-up-facebook-oauth2)
+    - [Set up Github OAuth2](#set-up-github-oauth2)
 
 <!-- /MarkdownTOC -->
 
@@ -38,6 +39,20 @@ python application.py
 
 - Create a new app in the [Facebook Developer Center](https://developers.facebook.com/apps)
 - Copy the following code into a file called `facebook_secrets.json`
+
+```
+{
+  "web": {
+    "app_id": "your app id",
+    "app_secret": "your app secret"
+  }
+}
+```
+
+### Set up Github OAuth2
+
+- Create a new app in the [Github Developer Settings](https://github.com/settings/developers)
+- Copy the following code into a file called `github_secrets.json`
 
 ```
 {

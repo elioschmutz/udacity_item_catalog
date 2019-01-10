@@ -1,14 +1,10 @@
+from authentication.errors import AccessTokenValidationError
 from flask import session as flask_session
 from models import LoginSession
 from models import User
 from oauth2client.client import flow_from_clientsecrets
 import json
 import requests
-
-
-class AccessTokenValidationError(Exception):
-    """
-    """
 
 
 class GoogleAuth(object):

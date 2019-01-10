@@ -1,5 +1,5 @@
 from authentication.auth import Authentication
-from authentication.google import AccessTokenValidationError
+from authentication.errors import AccessTokenValidationError
 from flask import abort
 from flask import flash
 from flask import Flask
@@ -46,6 +46,18 @@ def catalog_json_view():
 
 CLIENT_ID = json.loads(
     open('google_secrets.json', 'r').read())['web']['client_id']
+
+
+@app.route('/githublogin')
+@csrf_protection(validate_on_get=True)
+def githublogin():
+    try:
+        auth.login('github', request.args.get('code'))
+    except AccessTokenValidationError as err:
+        flash("Error on login: {}".format(err.message))
+        return redirect(url_for('login_view'))
+
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/googlelogin', methods=['POST'])

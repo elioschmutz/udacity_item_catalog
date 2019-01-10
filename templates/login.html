@@ -6,6 +6,7 @@
 <script src="https://connect.facebook.net/en_US/sdk.js" async defer></script>
 <script src="{{url_for('static', filename='google_auth.js')}}"></script>
 <script src="{{url_for('static', filename='facebook_auth.js')}}"></script>
+<script src="{{url_for('static', filename='github_auth.js')}}"></script>
 {% endblock %}
 
 {% block header %}
@@ -34,9 +35,14 @@
 <fb:login-button
     scope="public_profile,email"
     onlogin="onFacebookSignIn();">
+
 </fb:login-button>
 <!-- END FACEBOOK -->
 
+<!-- GITHUB -->
+<div id="signinButtonGithub">
+    <a class="btn btn-fla" href="https://github.com/login/oauth/authorize?client_id=d33b6a879866adc2b6b4&state={{csrf_token}}">Login with Github</a>
+</div>
 <script>
     var csrf_token = "{{csrf_token}}";
 </script>
