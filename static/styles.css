@@ -7,3 +7,7 @@
 .userInfo img {
     height: 100%;
 }
+
+.oauthButtons > div {
+    height: 4em;
+}

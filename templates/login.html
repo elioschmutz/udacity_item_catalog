@@ -17,31 +17,32 @@
 
 <p class="error"></p>
 
-<!-- GOOGLE -->
-<div id="signinButton">
-    <span class="g-signin"
-          data-scope="openid email"
-          data-clientid="{{googleclientid}}"
-          data-redirecturi="postmessage"
-          data-accesstype="offline"
-          data-cookiepolicy="single_host_origin"
-          data-callback="onGoogleSignIn"
-          data-approvalprompt="force">
-    </span>
-</div>
-<!-- END GOOGLE -->
+<div class="oauthButtons">
+  <div class="ouathGithub">
+    <div id="signinButtonGithub">
+      <a class="btn btn-fla" href="https://github.com/login/oauth/authorize?client_id=d33b6a879866adc2b6b4&state={{csrf_token}}">Login with Github</a>
+    </div>
+  </div>
+  <div class="oauthGoogle">
+    <div id="signinButton">
+        <span class="g-signin"
+              data-scope="openid email"
+              data-clientid="{{googleclientid}}"
+              data-redirecturi="postmessage"
+              data-accesstype="offline"
+              data-cookiepolicy="single_host_origin"
+              data-callback="onGoogleSignIn"
+              data-approvalprompt="force">
+        </span>
+    </div>
+  </div>
+  <div class="oauthFaebook">
+    <fb:login-button
+        scope="public_profile,email"
+        onlogin="onFacebookSignIn();">
 
-<!-- FACEBOOK -->
-<fb:login-button
-    scope="public_profile,email"
-    onlogin="onFacebookSignIn();">
-
-</fb:login-button>
-<!-- END FACEBOOK -->
-
-<!-- GITHUB -->
-<div id="signinButtonGithub">
-    <a class="btn btn-fla" href="https://github.com/login/oauth/authorize?client_id=d33b6a879866adc2b6b4&state={{csrf_token}}">Login with Github</a>
+    </fb:login-button>
+  </div>
 </div>
 <script>
     var csrf_token = "{{csrf_token}}";
