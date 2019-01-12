@@ -42,7 +42,9 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String(80), nullable=False, unique=True)
-    items = relationship("Item", backref="category")
+    items = relationship("Item",
+                         backref="category",
+                         order_by="desc(Item.creation_date)")
 
     def as_dict(self):
         values = super(Category, self).as_dict()
