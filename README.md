@@ -1,11 +1,22 @@
 # Item Catalog
 
+This is a demo flask application implementing OAuth with Google, Facebook and Github.
+
+As a guest, you can show categories and the related items. If you log in, you
+can add, edit or remove items within the predefined categories.
+
+## App-Demo
+![Demo of the app](./docs/assets/demo_guest.gif)
+
+## Login-Demo
+![Demo of the login](./docs/assets/demo_login.gif)
+
 <!-- MarkdownTOC levels="1" autolink=true autoanchor=false bracket="round" -->
 
 - [Installation](#installation)
-    - [Set up Google OAuth2](#set-up-google-oauth2)
-    - [Set up Facebook OAuth2](#set-up-facebook-oauth2)
-    - [Set up Github OAuth2](#set-up-github-oauth2)
+  - [Set up Google OAuth2](#set-up-google-oauth2)
+  - [Set up Facebook OAuth2](#set-up-facebook-oauth2)
+  - [Set up Github OAuth2](#set-up-github-oauth2)
 
 <!-- /MarkdownTOC -->
 
