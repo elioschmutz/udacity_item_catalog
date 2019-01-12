@@ -59,6 +59,14 @@ class Item(Base):
     creation_date = Column(DateTime, default=datetime.datetime.utcnow)
     category_id = Column(Integer, ForeignKey('category.id'))
 
+    @classmethod
+    def lookup_by_category(self, title, category_title):
+        query = self.query().join(Category)
+        query = query.filter(Category.title == category_title)
+        query = query.filter(Item.title == title)
+
+        return query.first()
+
 
 class User(Base):
     __tablename__ = 'user'

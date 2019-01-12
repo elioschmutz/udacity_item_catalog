@@ -102,12 +102,9 @@ def category_view(category_title):
 
 @app.route('/categories/<string:category_title>/<string:item_title>')
 def item_view(category_title, item_title):
-    item = Item.query().filter_by(title=item_title).first()
+    item = Item.lookup_by_category(item_title, category_title)
 
     if not item:
-        return abort(404)
-
-    if not category_title == item.category.title:
         return abort(404)
 
     return render_template('item.html', item=item)
@@ -149,12 +146,9 @@ def item_edit_view(category_title, item_title):
         return render_template('item_edit.html', categories=categories, item=item)
 
     categories = Category.query().all()
-    item = Item.query().filter_by(title=item_title).first()
+    item = Item.lookup_by_category(item_title, category_title)
 
     if not item:
-        return abort(404)
-
-    if not category_title == item.category.title:
         return abort(404)
 
     if request.method == 'POST':
@@ -179,12 +173,9 @@ def item_edit_view(category_title, item_title):
            methods=['GET', 'POST'])
 @requires_auth
 def item_delete_view(category_title, item_title):
-    item = Item.query().filter_by(title=item_title).first()
+    item = Item.lookup_by_category(item_title, category_title)
 
     if not item:
-        return abort(404)
-
-    if not category_title == item.category.title:
         return abort(404)
 
     if request.method == 'POST':
