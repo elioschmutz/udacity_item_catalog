@@ -1,7 +1,7 @@
 from models import Base
 from models import Category
 from models import Item
-from models import session
+from models import Session
 from models import setup
 import argparse
 
@@ -12,6 +12,7 @@ parser.add_argument('--with-example-content', action='store_true',
 parser.add_argument('--purge', action='store_true',
                     help='recreates the database if it is already existing')
 
+session = Session()
 
 init_content = {
     'Food': [
