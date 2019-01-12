@@ -13,6 +13,8 @@ providers = {
 
 
 class Authentication(object):
+    """Class for managing user authentication and login-status.
+    """
 
     def login(self, provider, *args, **kwargs):
         return providers.get(provider).login(*args, **kwargs)
