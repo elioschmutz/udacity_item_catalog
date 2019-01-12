@@ -32,7 +32,7 @@
 </select>
 
 <input class="waves-effect waves-light btn" type='submit' value='Update'>
-<a class="waves-effect waves-light btn btn-fla" href="{{url_for('dashboard')}}">Cancel</a>
+<a class="waves-effect waves-light btn btn-fla" href="{{url_for('item_view', category_title=item.category.title, item_title=item.title)}}">Cancel</a>
 </form>
 
 
