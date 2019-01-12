@@ -49,7 +49,7 @@ CLIENT_ID = json.loads(
 
 
 @app.route('/githublogin')
-@csrf_protection(validate_on_get=True)
+@csrf_protection(force_validation_on_get=True)
 def githublogin():
     try:
         auth.login('github', request.args.get('code'))
@@ -61,7 +61,7 @@ def githublogin():
 
 
 @app.route('/googlelogin', methods=['POST'])
-@csrf_protection
+@csrf_protection()
 def googlelogin():
     try:
         auth.login('google', request.form.get('id_token'))
@@ -74,7 +74,7 @@ def googlelogin():
 
 
 @app.route('/fbconnect', methods=['POST'])
-@csrf_protection
+@csrf_protection()
 def fbconnect():
     auth.login('facebook', request.data)
     return 'successful'
@@ -197,7 +197,7 @@ def item_delete_view(category_title, item_title):
 
 
 @app.route('/login', methods=['GET'])
-@csrf_protection
+@csrf_protection()
 def login_view():
     if auth.is_authenticated():
         flash("You are already logged in")
