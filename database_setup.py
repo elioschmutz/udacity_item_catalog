@@ -42,10 +42,10 @@ if __name__ == '__main__':
 
     setup()
 
-    if parsed_args.with_exmample_content:
-        for category_name, items in init_content.items():
-            category = Category(title=category_name)
-            session.add(category)
+    for category_name, items in init_content.items():
+        category = Category(title=category_name)
+        session.add(category)
+        if parsed_args.with_exmample_content:
             session.add_all([Item(category=category, **item) for item in items])
 
         session.commit()
