@@ -129,8 +129,14 @@ def item_add_view():
             flash("No category fouond with ID {}".format(category_id))
             return render()
 
+        title = escape(request.form.get('title'))
+
+        if Item.lookup_by_category(title, category.title):
+            flash("This item already exists within this category.")
+            return render()
+
         Item.create(
-            title=escape(request.form.get('title')),
+            title=title,
             description=escape(request.form.get('description')),
             category=category,
             )
@@ -159,7 +165,12 @@ def item_edit_view(category_title, item_title):
             flash("No category fouond with ID {}".format(category_id))
             return render()
 
-        item.title = escape(request.form.get('title'))
+        title = escape(request.form.get('title'))
+        if Item.lookup_by_category(title, category.title):
+            flash("This item already exists within this category.")
+            return render()
+
+        item.title = title
         item.description = escape(request.form.get('description'))
         item.category = category
         Session.commit()
