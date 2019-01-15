@@ -28,6 +28,12 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
+Create a `settings.cfg` file with app-settings:
+
+```sh
+ln -s development.cfg settings.cfg
+```
+
 Setup the SQLite-DB:
 
 ```sh

@@ -21,6 +21,9 @@ import json
 
 
 app = Flask(__name__)
+app.config.from_pyfile('settings.cfg')
+
+
 auth = Authentication()
 
 app.jinja_env.globals.update(
@@ -226,6 +229,7 @@ def unauthorized_view(e):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.env = app.config.get('ENV', 'production')
+    app.debug = app.config.get('DEBUG', False)
+
+    app.run(host='0.0.0.0', port=app.config.get('PORT'))
