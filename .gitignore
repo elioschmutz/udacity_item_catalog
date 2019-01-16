@@ -2,3 +2,4 @@
 *.db
 *_secrets.json
 settings.cfg
+venv
