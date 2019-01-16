@@ -1,5 +1,5 @@
-from authentication.base import AuthProvider
-from authentication.base import UserData
+from authentication.base_provider import AuthProvider
+from authentication.base_provider import UserData
 import requests
 
 

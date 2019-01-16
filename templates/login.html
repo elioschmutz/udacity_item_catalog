@@ -20,14 +20,14 @@
 <div class="oauthButtons">
   <div class="ouathGithub">
     <div id="signinButtonGithub">
-      <a class="btn btn-fla" href="https://github.com/login/oauth/authorize?client_id=d33b6a879866adc2b6b4&state={{csrf_token}}">Login with Github</a>
+      <a class="btn btn-fla" href="https://github.com/login/oauth/authorize?client_id={{github_client_id}}&state={{csrf_token}}">Login with Github</a>
     </div>
   </div>
   <div class="oauthGoogle">
     <div id="signinButton">
         <span class="g-signin"
               data-scope="openid email"
-              data-clientid="{{googleclientid}}"
+              data-clientid="{{google_client_id}}"
               data-redirecturi="postmessage"
               data-accesstype="offline"
               data-cookiepolicy="single_host_origin"
@@ -46,6 +46,7 @@
 </div>
 <script>
     var csrf_token = "{{csrf_token}}";
+    var fb_client_id = "{{fb_client_id}}";
 </script>
 
 {% endblock %}

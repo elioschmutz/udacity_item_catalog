@@ -1,7 +1,8 @@
-from authentication.base import AuthProvider
-from authentication.base import UserData
+from authentication.base_provider import AuthProvider
+from authentication.base_provider import UserData
 from authentication.errors import AccessTokenValidationError
 from oauth2client.client import flow_from_clientsecrets
+import os
 import requests
 
 
@@ -30,7 +31,9 @@ class GoogleAuth(AuthProvider):
     def _get_credentials_object(self, code):
         """Upgrade the authorization code into a credentials object
         """
-        oauth_flow = flow_from_clientsecrets(self.secrets_file_name, scope='')
+        absolute_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), self.secrets_file_name)
+        oauth_flow = flow_from_clientsecrets(absolute_file_path, scope='')
         oauth_flow.redirect_uri = 'postmessage'
         return oauth_flow.step2_exchange(code)
 

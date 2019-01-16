@@ -1,8 +1,8 @@
 from authentication.auth import Authentication
 from authentication.errors import AccessTokenValidationError
+from base import app
 from flask import abort
 from flask import flash
-from flask import Flask
 from flask import jsonify
 from flask import make_response
 from flask import redirect
@@ -18,10 +18,6 @@ from oauth2client.client import FlowExchangeError
 from security.csrf import csrf_protection
 from security.routes import requires_auth
 import json
-
-
-app = Flask(__name__)
-app.config.from_pyfile('settings.cfg')
 
 
 auth = Authentication()
@@ -47,8 +43,16 @@ def catalog_json_view():
     return jsonify(
         {'categories': [category.as_dict() for category in categories]})
 
-CLIENT_ID = json.loads(
-    open('google_secrets.json', 'r').read())['web']['client_id']
+
+# TODO: exclude to a better place
+with app.open_resource('google_secrets.json') as f:
+    GOOGLE_CLIENT_ID = json.loads(f.read())['web']['client_id']
+
+with app.open_resource('facebook_secrets.json') as f:
+    FB_CLIENT_ID = json.loads(f.read())['web']['app_id']
+
+with app.open_resource('github_secrets.json') as f:
+    GITHUB_CLIENT_ID = json.loads(f.read())['web']['app_id']
 
 
 @app.route('/githublogin')
@@ -207,7 +211,9 @@ def login_view():
         return redirect(url_for('dashboard'))
     return render_template('login.html',
                            csrf_token=flask_session.get('csrf_token'),
-                           googleclientid=CLIENT_ID)
+                           google_client_id=GOOGLE_CLIENT_ID,
+                           github_client_id=GITHUB_CLIENT_ID,
+                           fb_client_id=FB_CLIENT_ID)
 
 
 @app.route('/logout')

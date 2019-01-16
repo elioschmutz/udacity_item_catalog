@@ -1,3 +1,4 @@
+from base import app
 from sqlalchemy import Column
 from sqlalchemy import create_engine
 from sqlalchemy import DateTime
@@ -108,7 +109,7 @@ class LoginSession(Base):
     def lookup_by_token(self, token):
         return self.query().filter_by(token=token).first()
 
-engine = create_engine('sqlite:///item_catalog.db')
+engine = create_engine(app.config.get('DB_CONNECTION_STRING'))
 Base.metadata.bind = engine
 Session = scoped_session(sessionmaker(bind=engine))
 

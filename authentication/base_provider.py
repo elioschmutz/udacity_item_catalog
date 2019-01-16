@@ -1,3 +1,4 @@
+from base import app
 from flask import session as flask_session
 from models import LoginSession
 from models import User
@@ -65,5 +66,5 @@ class AuthProvider(object):
         return user
 
     def load_secrets(self):
-        with open(self.secrets_file_name, 'r') as file_:
-            return json.loads(file_.read())
+        with app.open_resource(self.secrets_file_name) as f:
+            return json.loads(f.read())
